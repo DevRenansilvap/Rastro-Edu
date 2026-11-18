@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rastro Edu — Gestão Escolar</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div id="tela-login" class="tela-login">
+    <div class="cartao-login">
+      <div class="logo-login">
+        <i class="fas fa-graduation-cap"></i>
+        <h1>Rastro Edu</h1>
+        <p>Plataforma de Gestão Escolar</p>
+      </div>
+      <form id="formulario-login">
+        <div class="grupo-campo">
+          <label for="usuario-login"><i class="fas fa-user"></i> Usuário</label>
+          <input type="text" id="usuario-login" placeholder="admin" value="admin">
+        </div>
+        <div class="grupo-campo">
+          <label for="senha-login"><i class="fas fa-lock"></i> Senha</label>
+          <input type="password" id="senha-login" placeholder="••••••" value="1234">
+        </div>
+        <button type="submit" class="botao botao-primario botao-bloco">
+          <i class="fas fa-sign-in-alt"></i> Entrar
+        </button>
+        <p class="dica-login">Use <strong>admin / 1234</strong> para acessar</p>
+      </form>
+    </div>
+  </div>
+
+  <div id="aplicacao" class="aplicacao oculto">
+
+    <aside id="barra-lateral" class="barra-lateral">
+      <div class="cabecalho-lateral">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="titulo-lateral">Rastro Edu</span>
+      </div>
+      <nav class="navegacao-lateral">
+        <a href="#" class="link-nav ativo" data-pagina="painel">
+          <i class="fas fa-th-large"></i><span>Painel</span>
+        </a>
+        <a href="#" class="link-nav" data-pagina="alunos">
+          <i class="fas fa-user-graduate"></i><span>Alunos</span>
+        </a>
+        <a href="#" class="link-nav" data-pagina="frequencia">
+          <i class="fas fa-calendar-check"></i><span>Frequência</span>
+        </a>
+        <a href="#" class="link-nav" data-pagina="cantina">
+          <i class="fas fa-utensils"></i><span>Cantina</span>
+        </a>
+        <a href="#" class="link-nav" data-pagina="relatorios">
+          <i class="fas fa-chart-bar"></i><span>Relatórios</span>
+        </a>
+        <a href="#" class="link-nav" data-pagina="configuracoes">
+          <i class="fas fa-cog"></i><span>Configurações</span>
+        </a>
+      </nav>
+      <div class="rodape-lateral">
+        <button id="botao-sair" class="botao-sair">
+          <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="conteudo-principal">
+
+      <header class="barra-topo">
+        <button id="botao-alternar-lateral" class="botao-icone">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="info-topo">
+          <h2 id="titulo-pagina">Painel</h2>
+        </div>
+        <div class="direita-topo">
+          <span class="data-topo" id="data-topo"></span>
+          <div class="usuario-topo">
+            <i class="fas fa-user-circle"></i>
+            <span>Coordenação</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="container-paginas">
+
+        <section id="pagina-painel" class="pagina ativo">
+          <div class="grade-estatisticas">
+            <div class="cartao-estatistica estatistica-azul">
+              <div class="icone-estatistica"><i class="fas fa-user-graduate"></i></div>
+              <div class="info-estatistica">
+                <span class="numero-estatistica" id="total-alunos">0</span>
+                <span class="rotulo-estatistica">Alunos Matriculados</span>
+              </div>
+            </div>
+            <div class="cartao-estatistica estatistica-verde">
+              <div class="icone-estatistica"><i class="fas fa-check-circle"></i></div>
+              <div class="info-estatistica">
+                <span class="numero-estatistica" id="presenca-hoje">0%</span>
+                <span class="rotulo-estatistica">Presença Hoje</span>
+              </div>
+            </div>
+            <div class="cartao-estatistica estatistica-laranja">
+              <div class="icone-estatistica"><i class="fas fa-exclamation-triangle"></i></div>
+              <div class="info-estatistica">
+                <span class="numero-estatistica" id="estoque-baixo">0</span>
+                <span class="rotulo-estatistica">Itens Estoque Baixo</span>
+              </div>
+            </div>
+            <div class="cartao-estatistica estatistica-vermelho">
+              <div class="icone-estatistica"><i class="fas fa-user-times"></i></div>
+              <div class="info-estatistica">
+                <span class="numero-estatistica" id="risco-evasao">0</span>
+                <span class="rotulo-estatistica">Risco de Evasão</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grade-graficos">
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-chart-line"></i> Frequência Semanal</h3>
+              </div>
+              <div class="corpo-cartao container-grafico">
+                <canvas id="grafico-frequencia-semanal"></canvas>
+              </div>
+            </div>
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-chart-pie"></i> Situação de Presença</h3>
+              </div>
+              <div class="corpo-cartao container-grafico">
+                <canvas id="grafico-presenca-status"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="grade-graficos">
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-boxes-stacked"></i> Consumo da Cantina</h3>
+              </div>
+              <div class="corpo-cartao container-grafico">
+                <canvas id="grafico-cantina-consumo"></canvas>
+              </div>
+            </div>
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-bell"></i> Alertas Recentes</h3>
+              </div>
+              <div class="corpo-cartao">
+                <ul class="lista-alertas" id="lista-alertas"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pagina-alunos" class="pagina">
+          <div class="acoes-pagina">
+            <div class="caixa-busca">
+              <i class="fas fa-search"></i>
+              <input type="text" id="busca-alunos" placeholder="Buscar aluno por nome ou matrícula...">
+            </div>
+            <button class="botao botao-primario" id="botao-novo-aluno">
+              <i class="fas fa-plus"></i> Novo Aluno
+            </button>
+          </div>
+          <div class="cartao">
+            <div class="corpo-cartao tabela-responsiva">
+              <table class="tabela-dados" id="tabela-alunos">
+                <thead>
+                  <tr>
+                    <th>Matrícula</th>
+                    <th>Nome</th>
+                    <th>Turma</th>
+                    <th>Turno</th>
+                    <th>Responsável</th>
+                    <th>Frequência</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="corpo-tabela-alunos"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="pagina-frequencia" class="pagina">
+          <div class="acoes-pagina">
+            <div class="grupo-filtro">
+              <label>Turma:</label>
+              <select id="filtro-turma">
+                <option value="">Todas</option>
+              </select>
+              <label>Data:</label>
+              <input type="date" id="data-frequencia" value="">
+            </div>
+            <button class="botao botao-primario" id="botao-salvar-frequencia">
+              <i class="fas fa-save"></i> Salvar Frequência
+            </button>
+          </div>
+
+          <div class="layout-frequencia">
+            <div class="cartao frequencia-principal">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-clipboard-list"></i> Chamada do Dia</h3>
+                <div class="acoes-cabecalho-freq">
+                  <button class="botao botao-pequeno botao-sucesso" id="botao-todos-presentes">
+                    <i class="fas fa-check-double"></i> Todos Presentes
+                  </button>
+                </div>
+              </div>
+              <div class="corpo-cartao tabela-responsiva">
+                <table class="tabela-dados" id="tabela-frequencia">
+                  <thead>
+                    <tr>
+                      <th>Matrícula</th>
+                      <th>Nome</th>
+                      <th>Turma</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="corpo-tabela-frequencia"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="cartao frequencia-lateral">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-exclamation-circle"></i> Alunos em Risco</h3>
+              </div>
+              <div class="corpo-cartao">
+                <p class="texto-suave">Alunos com mais de 25% de faltas nos últimos 30 dias:</p>
+                <ul class="lista-risco" id="lista-risco"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pagina-cantina" class="pagina">
+          <div class="acoes-pagina">
+            <div class="caixa-busca">
+              <i class="fas fa-search"></i>
+              <input type="text" id="busca-cantina" placeholder="Buscar item...">
+            </div>
+            <button class="botao botao-primario" id="botao-novo-item">
+              <i class="fas fa-plus"></i> Novo Item
+            </button>
+            <button class="botao botao-secundario" id="botao-registrar-movimento">
+              <i class="fas fa-exchange-alt"></i> Registrar Movimento
+            </button>
+          </div>
+
+          <div class="layout-cantina">
+            <div class="cartao cantina-principal">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-boxes-stacked"></i> Inventário</h3>
+              </div>
+              <div class="corpo-cartao tabela-responsiva">
+                <table class="tabela-dados" id="tabela-cantina">
+                  <thead>
+                    <tr>
+                      <th>Código</th>
+                      <th>Item</th>
+                      <th>Categoria</th>
+                      <th>Quantidade</th>
+                      <th>Unidade</th>
+                      <th>Mín. Estoque</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="corpo-tabela-cantina"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="cartao cantina-lateral">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-history"></i> Últimos Movimentos</h3>
+              </div>
+              <div class="corpo-cartao">
+                <ul class="lista-movimentos" id="lista-movimentos"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pagina-relatorios" class="pagina">
+          <div class="grade-relatorios">
+            <div class="cartao cartao-relatorio">
+              <div class="corpo-cartao corpo-relatorio">
+                <i class="fas fa-calendar-alt icone-relatorio"></i>
+                <h3>Frequência Mensal</h3>
+                <p>Relatório detalhado de presença e ausências por turma e período.</p>
+                <button class="botao botao-primario botao-pequeno" onclick="RastroEdu.gerarRelatorio('frequencia-mensal')">
+                  <i class="fas fa-file-alt"></i> Gerar Relatório
+                </button>
+              </div>
+            </div>
+            <div class="cartao cartao-relatorio">
+              <div class="corpo-cartao corpo-relatorio">
+                <i class="fas fa-user-slash icone-relatorio"></i>
+                <h3>Risco de Evasão</h3>
+                <p>Lista de alunos com alta taxa de ausências e indicadores de risco.</p>
+                <button class="botao botao-primario botao-pequeno" onclick="RastroEdu.gerarRelatorio('evasao')">
+                  <i class="fas fa-file-alt"></i> Gerar Relatório
+                </button>
+              </div>
+            </div>
+            <div class="cartao cartao-relatorio">
+              <div class="corpo-cartao corpo-relatorio">
+                <i class="fas fa-utensils icone-relatorio"></i>
+                <h3>Consumo da Cantina</h3>
+                <p>Resumo de entradas, saídas e estado atual do estoque.</p>
+                <button class="botao botao-primario botao-pequeno" onclick="RastroEdu.gerarRelatorio('cantina-mensal')">
+                  <i class="fas fa-file-alt"></i> Gerar Relatório
+                </button>
+              </div>
+            </div>
+            <div class="cartao cartao-relatorio">
+              <div class="corpo-cartao corpo-relatorio">
+                <i class="fas fa-school icone-relatorio"></i>
+                <h3>Visão Geral</h3>
+                <p>Panorama completo da instituição com todos os indicadores.</p>
+                <button class="botao botao-primario botao-pequeno" onclick="RastroEdu.gerarRelatorio('geral')">
+                  <i class="fas fa-file-alt"></i> Gerar Relatório
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cartao" id="cartao-saida-relatorio" style="display:none;">
+            <div class="cabecalho-cartao">
+              <h3 id="titulo-relatorio"><i class="fas fa-file-alt"></i> Relatório</h3>
+              <button class="botao botao-pequeno botao-secundario" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir
+              </button>
+            </div>
+            <div class="corpo-cartao" id="saida-relatorio"></div>
+          </div>
+        </section>
+
+        <section id="pagina-configuracoes" class="pagina">
+          <div class="grade-config">
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-school"></i> Dados da Instituição</h3>
+              </div>
+              <div class="corpo-cartao">
+                <form id="formulario-config">
+                  <div class="linha-campo">
+                    <div class="grupo-campo">
+                      <label>Nome da Escola</label>
+                      <input type="text" id="cfg-nome-escola" value="Escola Municipal Exemplo">
+                    </div>
+                    <div class="grupo-campo">
+                      <label>CNPJ</label>
+                      <input type="text" id="cfg-cnpj" value="00.000.000/0001-00">
+                    </div>
+                  </div>
+                  <div class="linha-campo">
+                    <div class="grupo-campo">
+                      <label>Endereço</label>
+                      <input type="text" id="cfg-endereco" value="Rua da Educação, 123 - Fortaleza/CE">
+                    </div>
+                    <div class="grupo-campo">
+                      <label>Telefone</label>
+                      <input type="text" id="cfg-telefone" value="(85) 3000-0000">
+                    </div>
+                  </div>
+                  <div class="linha-campo">
+                    <div class="grupo-campo">
+                      <label>E-mail</label>
+                      <input type="email" id="cfg-email" value="contato@escola.edu.br">
+                    </div>
+                    <div class="grupo-campo">
+                      <label>Diretor(a)</label>
+                      <input type="text" id="cfg-diretor" value="Maria da Silva">
+                    </div>
+                  </div>
+                  <button type="submit" class="botao botao-primario">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-palette"></i> Aparência</h3>
+              </div>
+              <div class="corpo-cartao">
+                <div class="grupo-campo">
+                  <label>Tema</label>
+                  <div class="opcoes-tema">
+                    <button class="botao-tema ativo" data-tema="claro">
+                      <i class="fas fa-sun"></i> Claro
+                    </button>
+                    <button class="botao-tema" data-tema="escuro">
+                      <i class="fas fa-moon"></i> Escuro
+                    </button>
+                  </div>
+                </div>
+                <div class="grupo-campo">
+                  <label>Cor Principal</label>
+                  <div class="opcoes-cor">
+                    <button class="botao-cor ativo" data-cor="#2563eb" style="background:#2563eb;"></button>
+                    <button class="botao-cor" data-cor="#059669" style="background:#059669;"></button>
+                    <button class="botao-cor" data-cor="#7c3aed" style="background:#7c3aed;"></button>
+                    <button class="botao-cor" data-cor="#dc2626" style="background:#dc2626;"></button>
+                    <button class="botao-cor" data-cor="#ea580c" style="background:#ea580c;"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cartao">
+              <div class="cabecalho-cartao">
+                <h3><i class="fas fa-database"></i> Dados</h3>
+              </div>
+              <div class="corpo-cartao">
+                <p class="texto-suave">Gerencie os dados armazenados localmente no navegador.</p>
+                <div class="acoes-config">
+                  <button class="botao botao-secundario" id="botao-exportar-dados">
+                    <i class="fas fa-download"></i> Exportar Dados (JSON)
+                  </button>
+                  <button class="botao botao-secundario" id="botao-importar-dados">
+                    <i class="fas fa-upload"></i> Importar Dados
+                  </button>
+                  <input type="file" id="arquivo-importar" accept=".json" style="display:none;">
+                  <button class="botao botao-perigo" id="botao-resetar-dados">
+                    <i class="fas fa-trash-alt"></i> Resetar Dados de Exemplo
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="sobreposicao-modal" id="modal-aluno">
+    <div class="modal">
+      <div class="cabecalho-modal">
+        <h3 id="titulo-modal-aluno"><i class="fas fa-user-graduate"></i> Novo Aluno</h3>
+        <button class="botao-fechar" onclick="RastroEdu.fecharModal('modal-aluno')">&times;</button>
+      </div>
+      <div class="corpo-modal">
+        <form id="formulario-aluno">
+          <input type="hidden" id="aluno-id">
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Nome Completo *</label>
+              <input type="text" id="aluno-nome" required>
+            </div>
+            <div class="grupo-campo">
+              <label>Matrícula *</label>
+              <input type="text" id="aluno-matricula" required>
+            </div>
+          </div>
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Turma *</label>
+              <select id="aluno-turma" required>
+                <option value="">Selecione...</option>
+                <option value="6A">6º Ano A</option>
+                <option value="6B">6º Ano B</option>
+                <option value="7A">7º Ano A</option>
+                <option value="7B">7º Ano B</option>
+                <option value="8A">8º Ano A</option>
+                <option value="8B">8º Ano B</option>
+                <option value="9A">9º Ano A</option>
+                <option value="9B">9º Ano B</option>
+              </select>
+            </div>
+            <div class="grupo-campo">
+              <label>Turno *</label>
+              <select id="aluno-turno" required>
+                <option value="">Selecione...</option>
+                <option value="Manhã">Manhã</option>
+                <option value="Tarde">Tarde</option>
+                <option value="Integral">Integral</option>
+              </select>
+            </div>
+          </div>
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Data de Nascimento</label>
+              <input type="date" id="aluno-nascimento">
+            </div>
+            <div class="grupo-campo">
+              <label>Responsável</label>
+              <input type="text" id="aluno-responsavel">
+            </div>
+          </div>
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Telefone do Responsável</label>
+              <input type="text" id="aluno-telefone">
+            </div>
+            <div class="grupo-campo">
+              <label>E-mail do Responsável</label>
+              <input type="email" id="aluno-email">
+            </div>
+          </div>
+          <div class="grupo-campo">
+            <label>Observações</label>
+            <textarea id="aluno-obs" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="rodape-modal">
+        <button class="botao botao-secundario" onclick="RastroEdu.fecharModal('modal-aluno')">Cancelar</button>
+        <button class="botao botao-primario" id="botao-salvar-aluno">
+          <i class="fas fa-save"></i> Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sobreposicao-modal" id="modal-item">
+    <div class="modal">
+      <div class="cabecalho-modal">
+        <h3 id="titulo-modal-item"><i class="fas fa-box"></i> Novo Item</h3>
+        <button class="botao-fechar" onclick="RastroEdu.fecharModal('modal-item')">&times;</button>
+      </div>
+      <div class="corpo-modal">
+        <form id="formulario-item">
+          <input type="hidden" id="item-id">
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Nome do Item *</label>
+              <input type="text" id="item-nome" required>
+            </div>
+            <div class="grupo-campo">
+              <label>Código</label>
+              <input type="text" id="item-codigo">
+            </div>
+          </div>
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Categoria *</label>
+              <select id="item-categoria" required>
+                <option value="">Selecione...</option>
+                <option value="Alimento">Alimento</option>
+                <option value="Bebida">Bebida</option>
+                <option value="Limpeza">Limpeza</option>
+                <option value="Descartável">Descartável</option>
+                <option value="Equipamento">Equipamento</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+            <div class="grupo-campo">
+              <label>Unidade *</label>
+              <select id="item-unidade" required>
+                <option value="">Selecione...</option>
+                <option value="un">Unidade (un)</option>
+                <option value="kg">Quilograma (kg)</option>
+                <option value="L">Litro (L)</option>
+                <option value="pct">Pacote (pct)</option>
+                <option value="cx">Caixa (cx)</option>
+              </select>
+            </div>
+          </div>
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Quantidade Atual *</label>
+              <input type="number" id="item-quantidade" min="0" step="0.1" required>
+            </div>
+            <div class="grupo-campo">
+              <label>Estoque Mínimo *</label>
+              <input type="number" id="item-minimo" min="0" step="0.1" required>
+            </div>
+          </div>
+          <div class="grupo-campo">
+            <label>Observações</label>
+            <textarea id="item-obs" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="rodape-modal">
+        <button class="botao botao-secundario" onclick="RastroEdu.fecharModal('modal-item')">Cancelar</button>
+        <button class="botao botao-primario" id="botao-salvar-item">
+          <i class="fas fa-save"></i> Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sobreposicao-modal" id="modal-movimento">
+    <div class="modal">
+      <div class="cabecalho-modal">
+        <h3><i class="fas fa-exchange-alt"></i> Registrar Movimento</h3>
+        <button class="botao-fechar" onclick="RastroEdu.fecharModal('modal-movimento')">&times;</button>
+      </div>
+      <div class="corpo-modal">
+        <form id="formulario-movimento">
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Item *</label>
+              <select id="mov-item" required>
+                <option value="">Selecione o item...</option>
+              </select>
+            </div>
+            <div class="grupo-campo">
+              <label>Tipo *</label>
+              <select id="mov-tipo" required>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+              </select>
+            </div>
+          </div>
+          <div class="linha-campo">
+            <div class="grupo-campo">
+              <label>Quantidade *</label>
+              <input type="number" id="mov-quantidade" min="0.1" step="0.1" required>
+            </div>
+            <div class="grupo-campo">
+              <label>Data</label>
+              <input type="date" id="mov-data">
+            </div>
+          </div>
+          <div class="grupo-campo">
+            <label>Motivo / Observação</label>
+            <input type="text" id="mov-motivo" placeholder="Ex: Compra mensal, Uso diário...">
+          </div>
+        </form>
+      </div>
+      <div class="rodape-modal">
+        <button class="botao botao-secundario" onclick="RastroEdu.fecharModal('modal-movimento')">Cancelar</button>
+        <button class="botao botao-primario" id="botao-salvar-movimento">
+          <i class="fas fa-save"></i> Registrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-notificacao" id="container-notificacao"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
